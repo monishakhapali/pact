@@ -1,0 +1,150 @@
+{
+  "consumer": {
+    "name": "BooksDetails"
+  },
+  "interactions": [
+    {
+      "description": "Getting all toys details",
+      "providerStates": [
+        {
+          "name": "toy barbie exists"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/getToyByName/barbie"
+      },
+      "response": {
+        "body": {
+          "category": "pretend play",
+          "price": 1000
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8"
+        },
+        "matchingRules": {
+          "body": {
+            "$.category": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.price": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "no details for toy gun",
+      "providerStates": [
+        {
+          "name": "toy gun does not exists"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/getToyByName/gun"
+      },
+      "response": {
+        "status": 404
+      }
+    },
+    {
+      "description": "Getting all toys details",
+      "providerStates": [
+        {
+          "name": "toys details"
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "path": "/allToysDetails"
+      },
+      "response": {
+        "body": [
+          {
+            "id": "string"
+          }
+        ],
+        "generators": {
+          "body": {
+            "$[*].id": {
+              "size": 20,
+              "type": "RandomString"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=UTF-8",
+          "testreqheader": "testreqheadervalue"
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$[*].id": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {
+            "Content-Type": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application/json(;\\s?charset=[\\w\\-]+)?"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-jvm": {
+      "version": "4.2.1"
+    },
+    "pactSpecification": {
+      "version": "3.0.0"
+    }
+  },
+  "provider": {
+    "name": "toysDetails"
+  }
+}
